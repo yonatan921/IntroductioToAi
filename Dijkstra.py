@@ -1,55 +1,111 @@
-class Graph:
-    def __init__(self, vertices):
+from name_tuppels import Point
+
+
+class Dijkstra:
+    def __init__(self, vertices):  # todo: add block edges
         self.V = vertices
-        self.graph = [[0 for column in range(vertices)]
-                      for row in range(vertices)]
+        self.graph = {}
+
+    def add_edge(self, u, v, w):
+        if u not in self.V:
+            self.V.add(u)
+        if v not in self.V:
+            self.V.add(v)
+        if u in self.graph:
+            self.graph[u][v] = w
+        else:
+            self.graph[u] = {v: w}
 
     def printSolution(self, dist):
         min = 1e7
         node1 = None
-        for node in range(self.V):
+        for node in self.V:
             if dist[node] < min and dist[node] != 0:
                 min = dist[node]
                 node1 = node
         print(f"dist: {min} node {node1}")
 
-
     def min_distance(self, dist, spt_set):
         min = 1e7
-        for v in range(self.V):
+        min_index = None
+
+        for v in self.V:
             if dist[v] < min and spt_set[v] is False:
                 min = dist[v]
                 min_index = v
+
         return min_index
 
-    def dijkstra(self, source):
+    def printPath(self, parent, j):
+        if parent[j] == -1:
+            print(j, end=" ")
+            return
+        self.printPath(parent, parent[j])
+        print(j, end=" ")
 
-        dist = [1e7] * self.V
+    def storePath(self, parent, j, path):
+        if parent[j] == -1:
+            path.append(j)
+            return
+        self.storePath(parent, parent[j], path)
+        path.append(j)
+
+    def dijkstra(self, source: Point, points: [Point]):
+        # Todo add points
+        dist = {vertex: float("-inf") for vertex in self.V}
         dist[source] = 0
-        spt_set = [False] * self.V
+        spt_set = {vertex: False for vertex in self.V}
 
-        for x in range(self.V):
+        for _ in range(len(self.V)):
             u = self.min_distance(dist, spt_set)
             spt_set[u] = True
-            for v in range(self.V):
-                if (self.graph[u][v] > 0 and
-                        spt_set[v] is False and
-                        dist[v] > dist[u] + self.graph[u][v]):
-                    dist[v] = dist[u] + self.graph[u][v]
+
+            if u in self.graph:
+                for v in self.graph[u].keys():
+                    if (self.graph[u][v] > 0 and
+                            spt_set[v] is False and
+                            dist[v] > dist[u] + self.graph[u][v]):
+                        dist[v] = dist[u] + self.graph[u][v]
 
         self.printSolution(dist)
+        return dist
+
+    def dijkstra_with_dest(self, source: Point, dest: Point):
+        dist = {vertex: float("-inf") for vertex in self.V}
+        parent = {vertex: -1 for vertex in self.V}  # NEW: to store the shortest path tree
+        dist[source] = 0
+        spt_set = {vertex: False for vertex in self.V}
+
+        for _ in range(len(self.V)):
+            u = self.min_distance(dist, spt_set)
+            spt_set[u] = True
+
+            if u in self.graph:
+                for v in self.graph[u].keys():
+                    if (self.graph[u][v] > 0 and
+                            spt_set[v] is False and
+                            dist[v] > dist[u] + self.graph[u][v]):
+                        dist[v] = dist[u] + self.graph[u][v]
+                        parent[v] = u  # NEW: to store the shortest path tree
+
+        # print the shortest distance and path
+        print(f"The shortest distance from {source} to {dest} is {dist[dest]}.")
+        path = []
+        self.storePath(parent, dest, path)
+        return path
 
 
-g = Graph(9)
-g.graph = [[0, 4, 0, 0, 0, 0, 0, 8, 0],
-           [4, 0, 8, 0, 0, 0, 0, 11, 0],
-           [0, 8, 0, 7, 0, 4, 0, 0, 2],
-           [0, 0, 7, 0, 9, 14, 0, 0, 0],
-           [0, 0, 0, 9, 0, 10, 0, 0, 0],
-           [0, 0, 4, 14, 10, 0, 2, 0, 0],
-           [0, 0, 0, 0, 0, 2, 0, 1, 6],
-           [8, 11, 0, 0, 0, 0, 1, 0, 7],
-           [0, 0, 2, 0, 0, 0, 6, 7, 0]
-           ]
+# d = Dijkstra({(x, y) for x in range(5) for y in range(5)})
+# d.add_edge((1, 2), (1, 3), 10)
+# d.add_edge((1, 2), (2, 2), 5)
+# d.add_edge((1, 2), (2, 1), 1)
+# d.add_edge((1, 3), (1, 4), 2)
+# d.add_edge((1, 2), (2, 2), 5)
+#
+# d.dijkstra((1, 2))
 
-g.dijkstra(7)
+
+# usage:
+d = Dijkstra({(1, 2)})
+d.add_edge((1, 2), (2, 2), 5)
+d.dijkstra_with_dest((1, 2), (2, 2))

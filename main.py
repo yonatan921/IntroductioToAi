@@ -5,8 +5,8 @@ from GameMaster import GameMaster
 
 def main():
     parser = Parser()
-    graph = Graph(parser.max_x, parser.max_y, parser.packages, parser.blocks, parser.fragile, parser.agents)
-    game_master = GameMaster(graph, parser.agents)
+    graph = Graph(parser.max_x, parser.max_y,  parser.blocks, parser.fragile, parser.agents)
+    game_master = GameMaster(graph, parser.agents, parser.packages)
     game_master.start_game()
 
 
