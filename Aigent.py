@@ -22,7 +22,7 @@ class GreedyAigent(Aigent):
         pass
 
     def __str__(self):
-        return "G"
+        return "A"
 
 
 class HumanAigent(Aigent):
