@@ -32,6 +32,5 @@ class Graph:
             self.add_package(package)
 
     def __str__(self):
-
         matrix_string = "\n".join(" ".join(str(tile) for tile in row) for row in self.grid)
         return matrix_string

@@ -4,7 +4,7 @@ from name_tuppels import Point
 
 class Dijkstra:
     def __init__(self, grid):  # todo: add block edges
-        self.V = grid
+        self.V = [[tile.point for tile in tile_list] for tile_list in grid]
         self.graph = {}
 
     def add_edge(self, u, v, w):
