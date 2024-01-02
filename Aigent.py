@@ -46,7 +46,21 @@ class StupidAigent(Aigent):
     def make_move(self, graph):
         if len(self.pakages) == 0:
             packages_to_take = graph.get_packages_to_take()
-            path = Dijkstra.dijkstra(self.point, graph.relevant_packages)
+            path = Dijkstra.dijkstra(self.point, packages_to_take)
+            new_location = path[0]
+        else:
+            min_distance = 1e7
+            picked_dest = None
+            for package in self.pakages:
+                dest_point, distance = Dijkstra.dijkstra_with_dest(self.point, package.point_dst)
+                if distance < min_distance:
+                    min_distance = distance
+                    picked_dest = dest_point
+            if min_distance == 1e7:
+                self.no_op()
+            else:
+                new_location = picked_dest
+        self.move_agent(new_location)
 
 
 

@@ -37,6 +37,10 @@ class Graph:
         pass
 
     def get_packages_to_take(self):
+        return {package.point_org for package in self.relevant_packages}
+
+    def get_packages_to_deliver(self):
+        return {package.point_dst for package in self.relevant_packages}
 
 
     def __str__(self):

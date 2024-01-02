@@ -104,9 +104,7 @@ class Dijkstra:
 
         # print the shortest distance and path
         print(f"The shortest distance from {source} to {dest} is {dist[dest]}.")
-        path = []
-        self.storePath(parent, dest, path)
-        return path
+        return dest, dist[dest]
 
 
 grid = [[Tile(Point(i, j)) for i in range(5)] for j in range(4)]
