@@ -7,15 +7,15 @@ class Dijkstra:
         self.V = [[tile.point for tile in tile_list] for tile_list in grid]
         self.graph = {}
 
-    def add_edge(self, u, v, w):
+    def add_edge(self, u, v):
         if u not in self.V:
             self.V.append(u)
         if v not in self.V:
             self.V.append(v)
         if u in self.graph:
-            self.graph[u][v] = w
+            self.graph[u][v] = 1
         else:
-            self.graph[u] = {v: w}
+            self.graph[u] = {v: 1}
 
     def printSolution(self, dist):
         min = 1e7
@@ -30,6 +30,9 @@ class Dijkstra:
         min = 1e7
         min_index = None
         for v in self.V:
+            x = dist[v]
+            if x == 0:
+                pass
             if dist[v] < min and spt_set[v] is False:
                 min = dist[v]
                 min_index = v
@@ -51,10 +54,11 @@ class Dijkstra:
         path.append(j)
 
     def dijkstra(self, source: Point, points: [Point]):
-        self.V = [vertex for vertex in self.V if vertex in points]
-        dist = {vertex: 1e7 for vertex in self.V}
+        spt_set = {point: False for row in self.V for point in row if isinstance(point, Point)}
+        self.V = {vertex for row in self.V for vertex in row if isinstance(vertex, Point)}
+        dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
         dist[source] = 0
-        spt_set = {vertex: False for vertex in self.V}
+
 
 
         for _ in range(len(self.V)):
@@ -68,14 +72,15 @@ class Dijkstra:
                             dist[v] > dist[u] + self.graph[u][v]):
                         dist[v] = dist[u] + self.graph[u][v]
 
-        self.printSolution(dist)
+        dist = {point: value for point, value in dist.items() if point in points}
         return dist
 
     def dijkstra_with_dest(self, source: Point, dest: Point):
-        dist = {vertex: 1e7 for vertex in self.V}
-        parent = {vertex: -1 for vertex in self.V}  # NEW: to store the shortest path tree
+        spt_set = {point: False for row in self.V for point in row if isinstance(point, Point)}
+        self.V = {vertex for row in self.V for vertex in row if isinstance(vertex, Point)}
+        dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
+        parent = {vertex: -1 for vertex in self.V if isinstance(vertex, Point)}  # NEW: to store the shortest path tree
         dist[source] = 0
-        spt_set = {vertex: False for vertex in self.V}
 
         for _ in range(len(self.V)):
             u = self.min_distance(dist, spt_set)
@@ -87,7 +92,7 @@ class Dijkstra:
                             spt_set[v] is False and
                             dist[v] > dist[u] + self.graph[u][v]):
                         dist[v] = dist[u] + self.graph[u][v]
-                        parent[v] = u  # NEW: to store the shortest path tree
+                    parent[v] = u  # NEW: to store the shortest path tree
 
         # print the shortest distance and path
         print(f"The shortest distance from {source} to {dest} is {dist[dest]}.")
@@ -98,13 +103,18 @@ class Dijkstra:
 
 grid = [[Tile(Point(i, j)) for i in range(5)] for j in range(4)]
 d = Dijkstra(grid)
-d.add_edge((1, 2), (1, 3), 10)
-d.add_edge((1, 2), (2, 2), 5)
-d.add_edge((1, 2), (2, 1), 1)
-d.add_edge((1, 3), (1, 4), 2)
-points = [(1, 1), (2, 2), (1, 3)]
+d.add_edge((1, 1), (1, 2))
+d.add_edge((1, 1), (2, 1))
+d.add_edge((1, 2), (1, 3))
+d.add_edge((1, 2), (2, 2))
+d.add_edge((2, 2), (3, 2))
+d.add_edge((2, 1), (3, 1))
+d.add_edge((3, 1), (3, 2))
+d.add_edge((3, 1), (4, 1))
+points = [Point(1, 3), Point(3, 2), Point(4, 1)]
 
-d.dijkstra((1, 2), points)
+# d.dijkstra((1, 1), points)
+d.dijkstra_with_dest(Point(1, 1), Point(1, 3))
 
 
 # # usage:
