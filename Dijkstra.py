@@ -53,13 +53,16 @@ class Dijkstra:
         self.storePath(parent, parent[j], path)
         path.append(j)
 
-    def dijkstra(self, source: Point, points: [Point]):
+    def pick_best_dest(self, dist):
+        return min(dist, key=lambda k: (dist[k], k.x, k.y))
+
+
+    def dijkstra(self, source: Point, points: {Point}):
         spt_set = {point: False for row in self.V for point in row if isinstance(point, Point)}
         self.V = {vertex for row in self.V for vertex in row if isinstance(vertex, Point)}
         dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
+        parent = {vertex: -1 for vertex in self.V if isinstance(vertex, Point)}
         dist[source] = 0
-
-
 
         for _ in range(len(self.V)):
             u = self.min_distance(dist, spt_set)
@@ -71,9 +74,14 @@ class Dijkstra:
                             spt_set[v] is False and
                             dist[v] > dist[u] + self.graph[u][v]):
                         dist[v] = dist[u] + self.graph[u][v]
+                    parent[v] = u
 
         dist = {point: value for point, value in dist.items() if point in points}
-        return dist
+        dest = self.pick_best_dest(dist)
+        path = []
+        self.storePath(parent, dest, path)
+        return path
+
 
     def dijkstra_with_dest(self, source: Point, dest: Point):
         spt_set = {point: False for row in self.V for point in row if isinstance(point, Point)}

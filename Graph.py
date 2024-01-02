@@ -31,6 +31,12 @@ class Graph:
         for package in self.relevant_packages:
             self.add_package(package)
 
+    def can_move(self, location, new_location):
+        pass
+
+    def get_packages_to_take(self):
+
+
     def __str__(self):
         matrix_string = "\n".join(" ".join(str(tile) for tile in row) for row in self.grid)
         return matrix_string
