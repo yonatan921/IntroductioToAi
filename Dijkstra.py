@@ -59,8 +59,6 @@ class Dijkstra:
         dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
         dist[source] = 0
 
-
-
         for _ in range(len(self.V)):
             u = self.min_distance(dist, spt_set)
             spt_set[u] = True
@@ -115,7 +113,6 @@ points = [Point(1, 3), Point(3, 2), Point(4, 1)]
 
 # d.dijkstra((1, 1), points)
 d.dijkstra_with_dest(Point(1, 1), Point(1, 3))
-
 
 # # usage:
 # d = Dijkstra({(1, 2)})

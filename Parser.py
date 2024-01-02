@@ -2,7 +2,7 @@ from Aigent import GreedyAigent, HumanAigent, InterferingAigent
 
 import argparse
 
-from name_tuppels import Package, Edge, Point
+from name_tuppels import Package, Point
 
 
 class Parser:
@@ -15,8 +15,8 @@ class Parser:
         self.max_x = None
         self.max_y = None
         self.packages: {Package} = set()
-        self.blocks: {Edge} = set()
-        self.fragile: {Edge} = set()
+        self.blocks: {frozenset} = set()
+        self.fragile: {frozenset} = set()
         self.agents = []
         with open(filename, "r") as file:
             lines = file.readlines()
@@ -57,15 +57,15 @@ class Parser:
         dead_line = int(words[7])
         return Package(org_point, from_time, dst_point, dead_line)
 
-    def parse_blocks(self, words: [str]) -> Edge:
+    def parse_blocks(self, words: [str]) -> frozenset:
         org_point = Point(int(words[1]), int(words[2]))
         dst_point = Point(int(words[3]), int(words[4]))
-        return Edge(org_point, dst_point)
+        return frozenset({org_point, dst_point})
 
-    def parse_fragile(self, words: [str]) -> Edge:
+    def parse_fragile(self, words: [str]) -> frozenset:
         org_point = Point(int(words[1]), int(words[2]))
         dst_point = Point(int(words[3]), int(words[4]))
-        return Edge(org_point, dst_point)
+        return frozenset({org_point, dst_point})
 
     def parse_greedy_aigent(self, words: [str]) -> Point:
         return Point(int(words[1]), int(words[2]))
