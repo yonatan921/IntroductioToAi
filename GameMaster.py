@@ -14,7 +14,7 @@ class GameMaster:
     def start_game(self):
         while not self.game_over():
             print(self)
-            self.agents[self.turn_index % len(self.agents)].make_move()
+            self.agents[self.turn_index % len(self.agents)].make_move(self.graph)
             self.timer += 1
             self.turn_index += 1
             self.update_packages()

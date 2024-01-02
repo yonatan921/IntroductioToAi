@@ -12,7 +12,7 @@ class Aigent(abc.ABC, Tile):
         self.pakages = set()
 
     @abc.abstractmethod
-    def make_move(self):
+    def make_move(self, graph):
         """
         Consider fragile.
         Consider update packages.
@@ -35,7 +35,7 @@ class GreedyAigent(Aigent):
         super().__init__(starting_point)
         self.symbol = "A"
 
-    def make_move(self):
+    def make_move(self, graph):
         pass
 
 
@@ -44,8 +44,17 @@ class HumanAigent(Aigent):
         super().__init__(starting_point)
         self.symbol = "H"
 
-    def make_move(self):
-        pass
+    def make_move(self, graph):
+        graph.__str__()
+        x = input("Enter your move: 'w' = up, 'a' = left, 'd' = right, 's' = down")
+        if x == 'w':
+            pass
+        elif x =='a':
+            pass
+        elif x == 'd':
+            pass
+        elif x == 's':
+            pass
 
 
 class InterferingAigent(Aigent):
