@@ -124,7 +124,6 @@ points = [Point(1, 3), Point(3, 2), Point(4, 1)]
 # d.dijkstra((1, 1), points)
 d.dijkstra_with_dest(Point(1, 1), Point(1, 3))
 
-
 # # usage:
 # d = Dijkstra({(1, 2)})
 # d.add_edge((1, 2), (2, 2), 5)
