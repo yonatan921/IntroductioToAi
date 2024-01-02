@@ -6,18 +6,19 @@ from name_tuppels import Package, Point
 class Graph:
     def __init__(self, max_x: int, max_y: int, blocks: {frozenset}, fragile: {frozenset}, agents: [Aigent]):
         self.grid = None
-        self.egdes = None
+        self.edges = None
         self.relevant_packages = set()
         self.fragile = fragile
         self.agents = agents
         self.init_grid(max_x, max_y, blocks)
-        x = None
 
     def init_grid(self, max_x, max_y, blocks: {frozenset}):
         self.grid = [[Tile(Point(i, j)) for i in range(max_x + 1)] for j in range(max_y + 1)]
         for aigent in self.agents:
             self.add_aigent(aigent)
-        self.egdes = self.create_neighbor_set() - blocks
+        self.edges = self.create_neighbor_dict()
+        for edge in blocks:
+            self.remove_edge(edge)
 
     def game_over(self):
         return len(self.relevant_packages) == 0
@@ -33,8 +34,8 @@ class Graph:
         for package in self.relevant_packages:
             self.add_package(package)
 
-    def can_move(self, location, new_location):
-        pass
+    def can_move(self, location: Point, new_location: Point):
+        return self.edges[location].get(new_location) is not None
 
     def get_packages_to_take(self):
         return {package.point_org for package in self.relevant_packages}
@@ -42,36 +43,30 @@ class Graph:
     def get_packages_to_deliver(self):
         return {package.point_dst for package in self.relevant_packages}
 
-
     def __str__(self):
         matrix_string = "\n".join(" ".join(str(tile) for tile in row) for row in self.grid)
         return matrix_string
 
-    def get_neighbors(self, row, col):
-        neighbors = set()
+    def remove_edge(self, edge: {Point}):
+        p1, p2 = list(edge)
+        if p1 in self.edges:
+            del self.edges[p1][p2]
+            del self.edges[p2][p1]
+
+    def create_neighbor_dict(self):
         num_rows, num_cols = len(self.grid), len(self.grid[0])
 
-        # Check and add neighbors in the top row
-        if row > 0:
-            neighbors.add(Point(row - 1, col))
-        # Check and add neighbors in the bottom row
-        if row < num_rows - 1:
-            neighbors.add(Point(row + 1, col))
-        # Check and add neighbors in the left column
-        if col > 0:
-            neighbors.add(Point(row, col - 1))
-        # Check and add neighbors in the right column
-        if col < num_cols - 1:
-            neighbors.add(Point(row, col + 1))
+        neighbor_dict = {
+            Point(j, i): {
+                Point(j, i - 1): 1 if i > 0 else None,
+                Point(j, i + 1): 1 if i < num_rows - 1 else None,
+                Point(j - 1, i): 1 if j > 0 else None,
+                Point(j + 1, i): 1 if j < num_cols - 1 else None
+            }
+            for i in range(num_rows)
+            for j in range(num_cols)
+        }
+        neighbor_dict = {coord: {k: v for k, v in neighbors.items() if v is not None} for coord, neighbors in
+                         neighbor_dict.items()}
 
-        return neighbors
-
-    def create_neighbor_set(self):
-        neighbor_set = set()
-
-        for i in range(len(self.grid)):
-            for j in range(len(self.grid[0])):
-                neighbors = self.get_neighbors( i, j)
-                neighbor_set.update({frozenset({Point(j, i), point}) for point in neighbors})
-
-        return neighbor_set
+        return neighbor_dict
