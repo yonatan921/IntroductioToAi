@@ -1,16 +1,17 @@
+from Tile import Tile
 from name_tuppels import Point
 
 
 class Dijkstra:
-    def __init__(self, vertices):  # todo: add block edges
-        self.V = vertices
+    def __init__(self, grid):  # todo: add block edges
+        self.V = grid
         self.graph = {}
 
     def add_edge(self, u, v, w):
         if u not in self.V:
-            self.V.add(u)
+            self.V.append(u)
         if v not in self.V:
-            self.V.add(v)
+            self.V.append(v)
         if u in self.graph:
             self.graph[u][v] = w
         else:
@@ -28,7 +29,6 @@ class Dijkstra:
     def min_distance(self, dist, spt_set):
         min = 1e7
         min_index = None
-
         for v in self.V:
             if dist[v] < min and spt_set[v] is False:
                 min = dist[v]
@@ -51,10 +51,11 @@ class Dijkstra:
         path.append(j)
 
     def dijkstra(self, source: Point, points: [Point]):
-        # Todo add points
-        dist = {vertex: float("-inf") for vertex in self.V}
+        self.V = [vertex for vertex in self.V if vertex in points]
+        dist = {vertex: 1e7 for vertex in self.V}
         dist[source] = 0
         spt_set = {vertex: False for vertex in self.V}
+
 
         for _ in range(len(self.V)):
             u = self.min_distance(dist, spt_set)
@@ -71,7 +72,7 @@ class Dijkstra:
         return dist
 
     def dijkstra_with_dest(self, source: Point, dest: Point):
-        dist = {vertex: float("-inf") for vertex in self.V}
+        dist = {vertex: 1e7 for vertex in self.V}
         parent = {vertex: -1 for vertex in self.V}  # NEW: to store the shortest path tree
         dist[source] = 0
         spt_set = {vertex: False for vertex in self.V}
@@ -95,17 +96,18 @@ class Dijkstra:
         return path
 
 
-# d = Dijkstra({(x, y) for x in range(5) for y in range(5)})
-# d.add_edge((1, 2), (1, 3), 10)
-# d.add_edge((1, 2), (2, 2), 5)
-# d.add_edge((1, 2), (2, 1), 1)
-# d.add_edge((1, 3), (1, 4), 2)
-# d.add_edge((1, 2), (2, 2), 5)
-#
-# d.dijkstra((1, 2))
-
-
-# usage:
-d = Dijkstra({(1, 2)})
+grid = [[Tile(Point(i, j)) for i in range(5)] for j in range(4)]
+d = Dijkstra(grid)
+d.add_edge((1, 2), (1, 3), 10)
 d.add_edge((1, 2), (2, 2), 5)
-d.dijkstra_with_dest((1, 2), (2, 2))
+d.add_edge((1, 2), (2, 1), 1)
+d.add_edge((1, 3), (1, 4), 2)
+points = [(1, 1), (2, 2), (1, 3)]
+
+d.dijkstra((1, 2), points)
+
+
+# # usage:
+# d = Dijkstra({(1, 2)})
+# d.add_edge((1, 2), (2, 2), 5)
+# d.dijkstra_with_dest((1, 2), (2, 2))
