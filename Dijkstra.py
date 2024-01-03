@@ -106,23 +106,23 @@ class Dijkstra:
         print(f"The shortest distance from {source} to {dest} is {dist[dest]}.")
         return dest, dist[dest]
 
-
-grid = [[Tile(Point(i, j)) for i in range(5)] for j in range(4)]
-d = Dijkstra(grid)
-d.add_edge((1, 1), (1, 2))
-d.add_edge((1, 1), (2, 1))
-d.add_edge((1, 2), (1, 3))
-d.add_edge((1, 2), (2, 2))
-d.add_edge((2, 2), (3, 2))
-d.add_edge((2, 1), (3, 1))
-d.add_edge((3, 1), (3, 2))
-d.add_edge((3, 1), (4, 1))
-points = [Point(1, 3), Point(3, 2), Point(4, 1)]
-
-# d.dijkstra((1, 1), points)
-d.dijkstra_with_dest(Point(1, 1), Point(1, 3))
-
-# # usage:
-# d = Dijkstra({(1, 2)})
-# d.add_edge((1, 2), (2, 2), 5)
-# d.dijkstra_with_dest((1, 2), (2, 2))
+#
+# grid = [[Tile(Point(i, j)) for i in range(5)] for j in range(4)]
+# d = Dijkstra(grid)
+# d.add_edge((1, 1), (1, 2))
+# d.add_edge((1, 1), (2, 1))
+# d.add_edge((1, 2), (1, 3))
+# d.add_edge((1, 2), (2, 2))
+# d.add_edge((2, 2), (3, 2))
+# d.add_edge((2, 1), (3, 1))
+# d.add_edge((3, 1), (3, 2))
+# d.add_edge((3, 1), (4, 1))
+# points = [Point(1, 3), Point(3, 2), Point(4, 1)]
+#
+# # d.dijkstra((1, 1), points)
+# d.dijkstra_with_dest(Point(1, 1), Point(1, 3))
+#
+# # # usage:
+# # d = Dijkstra({(1, 2)})
+# # d.add_edge((1, 2), (2, 2), 5)
+# # d.dijkstra_with_dest((1, 2), (2, 2))

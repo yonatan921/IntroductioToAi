@@ -1,4 +1,4 @@
-from Aigent import GreedyAigent, HumanAigent, InterferingAigent
+from Aigent import StupidAigent, HumanAigent, InterferingAigent
 
 import argparse
 
@@ -35,7 +35,7 @@ class Parser:
                 elif self.command_word(words) == "F":
                     self.fragile.add(self.parse_fragile(words))
                 elif self.command_word(words) == "A":
-                    self.agents.append(GreedyAigent(self.parse_greedy_aigent(words)))
+                    self.agents.append(StupidAigent(self.parse_greedy_aigent(words)))
                 elif self.command_word(words) == "H":
                     self.agents.append(HumanAigent(self.parse_human_aigent(words)))
                 elif self.command_word(words) == "I":
