@@ -70,3 +70,6 @@ class Graph:
                          neighbor_dict.items()}
 
         return neighbor_dict
+
+    def remove_fragile_edge(self, edge: {Point}):
+        self.fragile.remove(edge)

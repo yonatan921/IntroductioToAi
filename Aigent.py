@@ -31,17 +31,36 @@ class Aigent(abc.ABC, Tile):
     def no_op(self):
         pass
 
-    def move_agent(self, new_location):
-        #todo:
+    def move_agent(self, graph, new_location):
         """
         here move the location- check if can deliver package or take one and make sure if the edge
         we went through is fragile.
         if take or deliver package update the packages list.
         """
-        edge_crossed =
+        edge_crossed = {self.point, new_location}
+        if edge_crossed in graph.fragile:
+            graph.remove_edge(edge_crossed)
+            graph.remove_fragile_edge(edge_crossed)
+        # pick package from new location
+        for package in graph.relevant_packages:
+            if package.point_dst == new_location:
+                self.pakages.add(package)
+                graph.relevant_packages.remove(package)
+        # deliver package
+        if len(self.pakages) > 0:
+            for package in self.pakages:
+                if package.point_dst == new_location:
+                    self.pakages.remove(package)
+        # move the agent
+        self.point = new_location
 
-    def move_agent_without_packages(self, new_location):
-
+    def move_agent_without_packages(self, graph, new_location):
+        edge_crossed = {self.point, new_location}
+        if edge_crossed in graph.fragile:
+            graph.remove_edge(edge_crossed)
+            graph.remove_fragile_edge(edge_crossed)
+        # move the agent
+        self.point = new_location
 
 
 class StupidAigent(Aigent):
@@ -71,7 +90,7 @@ class StupidAigent(Aigent):
                 self.no_op()
             else:
                 new_location = picked_dest
-        self.move_agent(new_location)
+        self.move_agent(graph, new_location)
 
 
 
@@ -93,7 +112,7 @@ class HumanAigent(Aigent):
         elif x == 's':
             new_location = Point(self.point.x - 1, self.point.y)
         if graph.can_move(self.point, new_location):
-            self.move_agent(new_location)
+            self.move_agent(graph, new_location)
 
 
 class InterferingAigent(Aigent):
@@ -112,4 +131,4 @@ class InterferingAigent(Aigent):
             self.no_op()
         else:
             new_location = path[0]
-            self.move_agent_without_packages(new_location)
+            self.move_agent_without_packages(graph, new_location)
