@@ -3,9 +3,9 @@ from name_tuppels import Point
 
 
 class Dijkstra:
-    def __init__(self, grid):  # todo: add block edges
+    def __init__(self, grid, edges):  # todo: add block edges
         self.V = [[tile.point for tile in tile_list] for tile_list in grid]
-        self.graph = {}
+        self.graph = edges
 
     def add_edge(self, u, v):
         if u not in self.V:

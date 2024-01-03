@@ -33,7 +33,14 @@ class Aigent(abc.ABC, Tile):
 
     def move_agent(self, new_location):
         #todo:
-        pass
+        """
+        here move the location- check if can deliver package or take one and make sure if the edge
+        we went through is fragile.
+        if take or deliver package update the packages list.
+        """
+        edge_crossed =
+
+    def move_agent_without_packages(self, new_location):
 
 
 
@@ -44,10 +51,14 @@ class StupidAigent(Aigent):
         self.symbol = "A"
 
     def make_move(self, graph):
+        dijkstra = Dijkstra(graph.grid, graph.edges)
         if len(self.pakages) == 0:
             packages_to_take = graph.get_packages_to_take()
-            path = Dijkstra.dijkstra(self.point, packages_to_take)
-            new_location = path[0]
+            path = dijkstra.dijkstra(self.point, packages_to_take)
+            if len(path) == 0:
+                self.no_op()
+            else:
+                new_location = path[0]
         else:
             min_distance = 1e7
             picked_dest = None
@@ -91,5 +102,14 @@ class InterferingAigent(Aigent):
         super().__init__(starting_point)
         self.symbol = "I"
 
-    def make_move(self):
-        pass
+    def make_move(self, graph):
+        dijkstra = Dijkstra(graph.grid, graph.edges)
+        points_of_fragile = set()
+        for point in graph.fragile:
+            points_of_fragile.update(point)
+        path = dijkstra.dijkstra(self.point, points_of_fragile)
+        if len(path) == 0:
+            self.no_op()
+        else:
+            new_location = path[0]
+            self.move_agent_without_packages(new_location)
