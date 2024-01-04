@@ -37,7 +37,7 @@ class Aigent(abc.ABC, Tile):
         we went through is fragile.
         if take or deliver package update the packages list.
         """
-        edge_crossed = {self.point, new_location}
+        edge_crossed = frozenset({self.point, new_location})
         if edge_crossed in graph.fragile:
             graph.remove_edge(edge_crossed)
             graph.remove_fragile_edge(edge_crossed)
@@ -104,13 +104,13 @@ class HumanAigent(Aigent):
         graph.__str__()
         x = input("Enter your move: 'w' = up, 'a' = left, 'd' = right, 's' = down")
         if x == 'w':
-            new_location = Point(self.point.x + 1, self.point.y)
-        elif x == 'a':
             new_location = Point(self.point.x, self.point.y - 1)
-        elif x == 'd':
-            new_location = Point(self.point.x, self.point.y + 1)
-        elif x == 's':
+        elif x == 'a':
             new_location = Point(self.point.x - 1, self.point.y)
+        elif x == 'd':
+            new_location = Point(self.point.x + 1, self.point.y)
+        elif x == 's':
+            new_location = Point(self.point.x, self.point.y + 1)
         if graph.can_move(self.point, new_location):
             self.move_agent(graph, new_location)
 

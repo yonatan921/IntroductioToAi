@@ -68,7 +68,7 @@ class Dijkstra:
 
     def dijkstra(self, source: Point, points: {Point}):
         spt_set = {point: False for point in self.V if isinstance(point, Point)}
-        self.V = {vertex for vertex in self.V if isinstance(vertex, Point)}
+        # self.V = {vertex for vertex in self.V if isinstance(vertex, Point)}
         dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
         parent = {vertex: -1 for vertex in self.V if isinstance(vertex, Point)}
         dist[source] = 0
