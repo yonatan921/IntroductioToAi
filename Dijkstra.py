@@ -1,10 +1,19 @@
 from Tile import Tile
-from name_tuppels import Point
+from name_tuppels import Point, Package
 
 
 class Dijkstra:
     def __init__(self, grid, edges):  # todo: add block edges
-        self.V = [[tile.point for tile in tile_list] for tile_list in grid]
+        vertex = []
+        for tile_list in grid:
+            for tile in tile_list:
+                if isinstance(tile, Tile):
+                    vertex.append(tile.point)
+                elif isinstance(tile, Package):
+                    vertex.append(tile.point_org)
+        self.V = vertex
+
+        # self.V = [[tile.point for tile in tile_list if isinstance(tile, Tile)] for tile_list in grid]
         self.graph = edges
 
     def add_edge(self, u, v):
@@ -48,7 +57,7 @@ class Dijkstra:
 
     def storePath(self, parent, j, path):
         if parent[j] == -1:
-            path.append(j)
+            # path.append(j)
             return
         self.storePath(parent, parent[j], path)
         path.append(j)
@@ -58,8 +67,8 @@ class Dijkstra:
 
 
     def dijkstra(self, source: Point, points: {Point}):
-        spt_set = {point: False for row in self.V for point in row if isinstance(point, Point)}
-        self.V = {vertex for row in self.V for vertex in row if isinstance(vertex, Point)}
+        spt_set = {point: False for point in self.V if isinstance(point, Point)}
+        self.V = {vertex for vertex in self.V if isinstance(vertex, Point)}
         dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
         parent = {vertex: -1 for vertex in self.V if isinstance(vertex, Point)}
         dist[source] = 0
@@ -71,10 +80,10 @@ class Dijkstra:
             if u in self.graph:
                 for v in self.graph[u].keys():
                     if (self.graph[u][v] > 0 and
-                            spt_set[v] is False and
+                            v in spt_set and spt_set[v] is False and
                             dist[v] > dist[u] + self.graph[u][v]):
                         dist[v] = dist[u] + self.graph[u][v]
-                    parent[v] = u
+                        parent[v] = u
 
         dist = {point: value for point, value in dist.items() if point in points}
         dest = self.pick_best_dest(dist)
