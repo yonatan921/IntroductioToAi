@@ -2,7 +2,8 @@ from Aigent import StupidAigent, HumanAigent, InterferingAigent
 
 import argparse
 
-from name_tuppels import Package, Point
+from Tile import Package
+from name_tuppels import Point
 
 
 class Parser:

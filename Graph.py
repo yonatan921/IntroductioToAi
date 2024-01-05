@@ -1,6 +1,6 @@
 from Aigent import Aigent
-from Tile import Tile
-from name_tuppels import Package, Point
+from Tile import Tile, Package
+from name_tuppels import  Point
 
 
 class Graph:
@@ -27,7 +27,7 @@ class Graph:
         self.grid[aigent.point.y][aigent.point.x] = aigent
 
     def add_package(self, package: Package):
-        self.grid[package.point_org.y][package.point_org.x] = package
+        self.grid[package.point.y][package.point.x] = package
 
     def update_packages(self, timer, packages):
         self.relevant_packages = {package for package in packages if package.from_time <= timer <= package.dead_line}
@@ -38,7 +38,7 @@ class Graph:
         return self.edges[location].get(new_location) is not None
 
     def get_packages_to_take(self):
-        return {package.point_org for package in self.relevant_packages}
+        return {package.point for package in self.relevant_packages}
 
     def get_packages_to_deliver(self):
         return {package.point_dst for package in self.relevant_packages}

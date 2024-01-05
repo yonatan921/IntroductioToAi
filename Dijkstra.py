@@ -1,19 +1,19 @@
-from Tile import Tile
-from name_tuppels import Point, Package
+from Tile import Tile, Package
+from name_tuppels import Point
 
 
 class Dijkstra:
     def __init__(self, grid, edges):  # todo: add block edges
-        vertex = []
-        for tile_list in grid:
-            for tile in tile_list:
-                if isinstance(tile, Tile):
-                    vertex.append(tile.point)
-                elif isinstance(tile, Package):
-                    vertex.append(tile.point_org)
-        self.V = vertex
+        # vertex = []
+        # for tile_list in grid:
+        #     for tile in tile_list:
+        #         if isinstance(tile, Tile):
+        #             vertex.append(tile.point)
+        #         elif isinstance(tile, Package):
+        #             vertex.append(tile.point)
+        # self.V = vertex
 
-        # self.V = [[tile.point for tile in tile_list if isinstance(tile, Tile)] for tile_list in grid]
+        self.V = [[tile.point for tile in tile_list if isinstance(tile, Tile)] for tile_list in grid]
         self.graph = edges
 
     def add_edge(self, u, v):
@@ -65,12 +65,11 @@ class Dijkstra:
     def pick_best_dest(self, dist):
         return min(dist, key=lambda k: (dist[k], k.x, k.y))
 
-
     def dijkstra(self, source: Point, points: {Point}):
-        spt_set = {point: False for point in self.V if isinstance(point, Point)}
+        spt_set = {point: False for point in self.V}
         # self.V = {vertex for vertex in self.V if isinstance(vertex, Point)}
-        dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
-        parent = {vertex: -1 for vertex in self.V if isinstance(vertex, Point)}
+        dist = {vertex: 1e7 for vertex in self.V}
+        parent = {vertex: -1 for vertex in self.V}
         dist[source] = 0
 
         for _ in range(len(self.V)):
@@ -91,12 +90,11 @@ class Dijkstra:
         self.storePath(parent, dest, path)
         return path
 
-
     def dijkstra_with_dest(self, source: Point, dest: Point):
-        spt_set = {point: False for row in self.V for point in row if isinstance(point, Point)}
-        self.V = {vertex for row in self.V for vertex in row if isinstance(vertex, Point)}
-        dist = {vertex: 1e7 for vertex in self.V if isinstance(vertex, Point)}
-        parent = {vertex: -1 for vertex in self.V if isinstance(vertex, Point)}  # NEW: to store the shortest path tree
+        spt_set = {point: False for row in self.V for point in row}
+        # self.V = {vertex for row in self.V for vertex in row }
+        dist = {vertex: 1e7 for vertex in self.V}
+        parent = {vertex: -1 for vertex in self.V}  # NEW: to store the shortest path tree
         dist[source] = 0
 
         for _ in range(len(self.V)):
