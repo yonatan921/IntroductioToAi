@@ -55,6 +55,7 @@ class Aigent(abc.ABC, Tile):
                 if package.point_dst == new_location:
                     self.pakages.remove(package)
                     graph.remove_tile(package.point_dst)
+
         # move the agent
 
         graph.move_agent(self.point, new_location)
@@ -78,6 +79,7 @@ class StupidAigent(Aigent):
 
     def make_move(self, graph):
         dijkstra = Dijkstra(graph.grid, graph.edges)
+        new_location = self.point
         if len(self.pakages) == 0:
             packages_to_take = graph.get_packages_to_take()
             path = dijkstra.dijkstra(self.point, packages_to_take)

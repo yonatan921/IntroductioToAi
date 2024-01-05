@@ -82,7 +82,7 @@ class Dijkstra:
 
         dist = {point: value for point, value in dist.items() if point in points and value != 0}
         path = []
-        if dist:
+        if not dist:
             return path
         dest = self.pick_best_dest(dist)
         self.storePath(parent, dest, path)
