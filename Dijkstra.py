@@ -4,16 +4,12 @@ from name_tuppels import Point
 
 class Dijkstra:
     def __init__(self, grid, edges):  # todo: add block edges
-        # vertex = []
-        # for tile_list in grid:
-        #     for tile in tile_list:
-        #         if isinstance(tile, Tile):
-        #             vertex.append(tile.point)
-        #         elif isinstance(tile, Package):
-        #             vertex.append(tile.point)
-        # self.V = vertex
+        vertex = set()
+        for tile_list in grid:
+            for tile in tile_list:
+                vertex.add(tile.point)
 
-        self.V = [[tile.point for tile in tile_list if isinstance(tile, Tile)] for tile_list in grid]
+        self.V = vertex
         self.graph = edges
 
     def add_edge(self, u, v):
