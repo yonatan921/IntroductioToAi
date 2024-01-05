@@ -57,6 +57,7 @@ class Aigent(abc.ABC, Tile):
                 if package.point_dst == new_location:
                     deliver_packages.add(package)
                     graph.remove_tile(package.point_dst)
+                    self.score += 1
             self.pakages -= deliver_packages
 
         # move the agent
