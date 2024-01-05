@@ -16,4 +16,5 @@ class Package(Tile):
         self.from_time = from_time
         self.point_dst = point_dst
         self.dead_line = dead_line
+        self.picked_up = False
         self.symbol = "P"

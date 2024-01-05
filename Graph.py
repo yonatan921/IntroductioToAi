@@ -30,7 +30,7 @@ class Graph:
         self.grid[package.point.y][package.point.x] = package
 
     def update_packages(self, timer, packages):
-        self.relevant_packages = {package for package in packages if package.from_time <= timer <= package.dead_line}
+        self.relevant_packages = {package for package in packages if package.from_time <= timer <= package.dead_line and not package.picked_up}
         for package in self.relevant_packages:
             self.add_package(package)
 
