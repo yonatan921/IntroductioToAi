@@ -18,6 +18,7 @@ class GameMaster:
             self.timer += 1
             self.turn_index += 1
             self.update_packages()
+        print(self)
 
     def game_over(self):
         return self.graph.game_over() and all([aigent.game_over() for aigent in self.agents])

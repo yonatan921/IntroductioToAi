@@ -52,10 +52,12 @@ class Aigent(abc.ABC, Tile):
         graph.relevant_packages -= taken_packages
         # deliver package
         if len(self.pakages) > 0:
+            deliver_packages = set()
             for package in self.pakages:
                 if package.point_dst == new_location:
-                    self.pakages.remove(package)
+                    deliver_packages.add(package)
                     graph.remove_tile(package.point_dst)
+            self.pakages -= deliver_packages
 
         # move the agent
 
@@ -89,17 +91,12 @@ class StupidAigent(Aigent):
             else:
                 new_location = path[0]
         else:
-            min_distance = 1e7
-            picked_dest = None
             for package in self.pakages:
-                dest_point, distance = Dijkstra.dijkstra_with_dest(self.point, package.point_dst)
-                if distance < min_distance:
-                    min_distance = distance
-                    picked_dest = dest_point
-            if min_distance == 1e7:
-                self.no_op()
-            else:
-                new_location = picked_dest
+                path = dijkstra.dijkstra_with_dest(self.point, package.point_dst)
+                if len(path) == 0:
+                    self.no_op()
+                else:
+                    new_location = path[0]
         self.move_agent(graph, new_location)
 
 
@@ -111,7 +108,7 @@ class HumanAigent(Aigent):
 
 
     def make_move(self, graph):
-        x = input("Enter your move: 'w' = up, 'a' = left, 'd' = right, 's' = down")
+        x = input("Enter your move: 'w' = up, 'a' = left, 'd' = right, 's' = down \n")
         if x == 'w':
             new_location = Point(self.point.x, self.point.y - 1)
         elif x == 'a':
@@ -120,6 +117,9 @@ class HumanAigent(Aigent):
             new_location = Point(self.point.x + 1, self.point.y)
         elif x == 's':
             new_location = Point(self.point.x, self.point.y + 1)
+        else:
+            new_location = self.point
+            self.no_op()
         if graph.can_move(self.point, new_location):
             self.move_agent(graph, new_location)
 

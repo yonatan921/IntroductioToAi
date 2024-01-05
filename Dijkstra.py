@@ -89,7 +89,7 @@ class Dijkstra:
         return path
 
     def dijkstra_with_dest(self, source: Point, dest: Point):
-        spt_set = {point: False for row in self.V for point in row}
+        spt_set = {point: False for point in self.V}
         # self.V = {vertex for row in self.V for vertex in row }
         dist = {vertex: 1e7 for vertex in self.V}
         parent = {vertex: -1 for vertex in self.V}  # NEW: to store the shortest path tree
@@ -105,11 +105,16 @@ class Dijkstra:
                             spt_set[v] is False and
                             dist[v] > dist[u] + self.graph[u][v]):
                         dist[v] = dist[u] + self.graph[u][v]
-                    parent[v] = u  # NEW: to store the shortest path tree
+                        parent[v] = u
 
-        # print the shortest distance and path
-        print(f"The shortest distance from {source} to {dest} is {dist[dest]}.")
-        return dest, dist[dest]
+        dist = dist.get(dest)
+        path = []
+        if not dist:
+            return path
+        self.storePath(parent, dest, path)
+        return path
+
+
 
 #
 # grid = [[Tile(Point(i, j)) for i in range(5)] for j in range(4)]
