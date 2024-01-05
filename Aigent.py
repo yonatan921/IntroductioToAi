@@ -42,16 +42,19 @@ class Aigent(abc.ABC, Tile):
             graph.remove_edge(edge_crossed)
             graph.remove_fragile_edge(edge_crossed)
         # pick package from new location
+        taken_packages = set()
         for package in graph.relevant_packages:
-            if package.point_dst == new_location:
+            if package.point == new_location:
+                taken_packages.add(package)
                 self.pakages.add(package)
-                graph.relevant_packages.remove(package)
+                graph.remove_tile(package.point)
+        graph.relevant_packages -= taken_packages
         # deliver package
         if len(self.pakages) > 0:
             for package in self.pakages:
                 if package.point_dst == new_location:
                     self.pakages.remove(package)
-                    graph.renove_tile(package.point_dst)
+                    graph.remove_tile(package.point_dst)
         # move the agent
 
         graph.move_agent(self.point, new_location)
@@ -63,6 +66,7 @@ class Aigent(abc.ABC, Tile):
             graph.remove_edge(edge_crossed)
             graph.remove_fragile_edge(edge_crossed)
         # move the agent
+        graph.move_agent(self.point, new_location)
         self.point = new_location
 
 
@@ -104,7 +108,6 @@ class HumanAigent(Aigent):
 
 
     def make_move(self, graph):
-        graph.__str__()
         x = input("Enter your move: 'w' = up, 'a' = left, 'd' = right, 's' = down")
         if x == 'w':
             new_location = Point(self.point.x, self.point.y - 1)

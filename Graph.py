@@ -45,7 +45,7 @@ class Graph:
 
     def __str__(self):
         matrix_string = "\n".join(" ".join(str(tile) for tile in row) for row in self.grid)
-        return matrix_string
+        return matrix_string + '\n'
 
     def remove_edge(self, edge: {Point}):
         p1, p2 = list(edge)

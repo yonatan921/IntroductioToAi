@@ -80,9 +80,11 @@ class Dijkstra:
                         dist[v] = dist[u] + self.graph[u][v]
                         parent[v] = u
 
-        dist = {point: value for point, value in dist.items() if point in points}
-        dest = self.pick_best_dest(dist)
+        dist = {point: value for point, value in dist.items() if point in points and value != 0}
         path = []
+        if dist:
+            return path
+        dest = self.pick_best_dest(dist)
         self.storePath(parent, dest, path)
         return path
 
