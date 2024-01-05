@@ -51,7 +51,10 @@ class Aigent(abc.ABC, Tile):
             for package in self.pakages:
                 if package.point_dst == new_location:
                     self.pakages.remove(package)
+                    graph.renove_tile(package.point_dst)
         # move the agent
+
+        graph.move_agent(self.point, new_location)
         self.point = new_location
 
     def move_agent_without_packages(self, graph, new_location):

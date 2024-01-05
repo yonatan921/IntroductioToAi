@@ -73,3 +73,17 @@ class Graph:
 
     def remove_fragile_edge(self, edge: {Point}):
         self.fragile.remove(edge)
+
+    def remove_tile(self, point: Point):
+        # remove agent
+        self.grid[point.y][point.x] = Tile(point)
+
+    def move_agent(self, org_point: Point, new_point: Point):
+        # Add agent to new place
+        get_agent = self.grid[org_point.y][org_point.x]
+        self.grid[new_point.y][new_point.x] = get_agent
+
+        # remove agent
+        self.remove_tile(org_point)
+
+
