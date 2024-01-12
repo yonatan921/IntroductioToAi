@@ -5,12 +5,12 @@ from name_tuppels import Point
 
 
 class Node:
-    def __init__(self, parent, action, state, depth):
+    def __init__(self, parent, action, state, depth, path_cost: int):
         self.parent: Node = parent
         self.action: Point = action
         self.state: Graph = state
         self.depth: int = depth
-        self.path_cost: int = None
+        self.path_cost: int = path_cost
 
     def step_cost(self, node):
         pass

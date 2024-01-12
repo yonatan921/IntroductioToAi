@@ -1,6 +1,6 @@
 import abc
 import heapq
-from typing import Callable
+from typing import Callable, Optional, Any
 
 from Node import Node
 from Problem import Problem
@@ -8,25 +8,29 @@ from Problem import Problem
 
 class SearchALgo(abc.ABC):
 
-    def run_algo(self, problem: Problem, heuristic: Callable):
+    def run_algo(self, problem: Problem, heuristic: Callable) -> Optional[Node]:
         heap: [Node] = []
+        init_node = Node(None, None, problem.init_state, 0, 0)
+        heapq.heappush(heap, init_node)
         closed: {Node: int} = {}
         while heap:
             node = heapq.heappop(heap)
-            if problem.goal_state == node.state or self.check_expansion_limit(node.depth):
+            if problem.goal_state(node.state) or self.check_expansion_limit(node.depth):
                 return node
             if node not in closed or self.evaluation(node, heuristic) < closed[node]:
                 closed[node] = self.evaluation(node, heuristic)
-            successors = self.expand(node, problem)
+            successors = self.expand(node)
             for successor in successors:
                 heapq.heappush(heap, successor)
 
-    def expand(self, node: Node, problem: Problem) -> {Node}:
+        return None
+
+    def expand(self, node: Node) -> {Node}:
         successors = set()
         for action, result in node.find_successors():
-            s = Node(node, action, result, node.depth + 1)
-            s.path_cost = node.path_cost + problem.path_cost(node.action, action)
-            successors.add(s)
+            successor = Node(parent=node, action=action, state=result, depth=node.depth + 1,
+                             path_cost=node.path_cost + result.edge_cost(node.action, action))
+            successors.add(successor)
         return successors
 
     @abc.abstractmethod

@@ -1,6 +1,7 @@
-from Aigent import Aigent
+from Aigent import Aigent, AiAigent
 from Graph import Graph
 from Problem import Problem
+from SearchALgo import GreedySearch
 
 
 class GameMaster:
@@ -12,7 +13,10 @@ class GameMaster:
         self.all_packages = packages
         self.update_packages()
         self.aiAigent = agents[0]
-        problem = Problem(self.graph, self.aiAigent.make_move, self.graph.game_over, self.graph.edge_cost)
+        problem = Problem(self.graph, lambda g: g.game_over())
+        ai_algo = GreedySearch()
+        last_node = ai_algo.run_algo(problem, lambda x: 0)
+        self.aiAigent.parse_move(last_node)
 
     def start_game(self):
         while not self.game_over():
@@ -39,4 +43,3 @@ class GameMaster:
 
     def __str__(self):
         return str(self.graph)
-
