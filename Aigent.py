@@ -1,5 +1,7 @@
 import abc
+from typing import Tuple
 
+from Graph import Graph
 from Tile import Tile
 from name_tuppels import Point
 from Dijkstra import Dijkstra
@@ -101,12 +103,10 @@ class StupidAigent(Aigent):
         self.move_agent(graph, new_location)
 
 
-
 class HumanAigent(Aigent):
     def __init__(self, starting_point: Point):
         super().__init__(starting_point)
         self.symbol = "H"
-
 
     def make_move(self, graph):
         x = input("Enter your move: 'w' = up, 'a' = left, 'd' = right, 's' = down \n")
@@ -142,3 +142,23 @@ class InterferingAigent(Aigent):
         else:
             new_location = path[0]
             self.move_agent_without_packages(graph, new_location)
+
+
+class aiAigent(Aigent):
+    def __init__(self, starting_point: Point):
+        super().__init__(starting_point)
+        self.symbol = "AI"
+        self.moves = []
+        self.moves_index = 0
+
+    def make_move(self, graph):
+        new_location = self.moves[self.moves_index]
+        self.move_agent(graph, new_location)
+
+    def think_move(self, graph:Graph) -> Tuple[Point, Graph]:
+        pass
+
+
+
+
+

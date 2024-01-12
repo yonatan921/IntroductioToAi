@@ -1,5 +1,6 @@
 from Aigent import Aigent
 from Graph import Graph
+from Problem import Problem
 
 
 class GameMaster:
@@ -10,6 +11,8 @@ class GameMaster:
         self.timer = 0
         self.all_packages = packages
         self.update_packages()
+        self.aiAigent = agents[0]
+        problem = Problem(self.graph, self.aiAigent.make_move, self.graph.game_over, self.graph.edge_cost)
 
     def start_game(self):
         while not self.game_over():
