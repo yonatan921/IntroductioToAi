@@ -1,5 +1,4 @@
 import copy
-import sys
 
 from Dijkstra import Dijkstra
 from name_tuppels import Point
