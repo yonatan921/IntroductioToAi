@@ -68,6 +68,17 @@ class MST:
         new_graph.update_edges(new_edges)
         return new_graph
 
+    def calc_edges(self, graph):
+        sum_edges = 0
+        for edge in graph.edges:
+            sum_edges += sum(edge.values())
+        return sum_edges / 2
+
+    def run_algo(self, graph):
+        new_graph = self.create_relevant_vertex_graph(graph)
+        mst_graph = self.find_mst(new_graph)
+        return self.calc_edges(mst_graph)
+
 
 
 
