@@ -1,7 +1,6 @@
 import abc
 from typing import Tuple
 
-from Graph import Graph
 from Node import Node
 from Tile import Tile
 from name_tuppels import Point
@@ -35,11 +34,6 @@ class Aigent(abc.ABC, Tile):
         pass
 
     def move_agent(self, graph, new_location):
-        """
-        here move the location- check if can deliver package or take one and make sure if the edge
-        we went through is fragile.
-        if take or deliver package update the packages list.
-        """
         edge_crossed = frozenset({self.point, new_location})
         if edge_crossed in graph.fragile:
             graph.remove_edge(edge_crossed)
@@ -152,11 +146,8 @@ class AiAigent(Aigent):
         self.moves = []
 
     def make_move(self, graph):
-        new_location = self.moves.pop()
+        new_location = self.moves.pop().action
         self.move_agent(graph, new_location)
-
-    def think_move(self, graph: Graph) -> Tuple[Point, Graph]:
-        pass
 
     def parse_move(self, node: Node):
         while node:

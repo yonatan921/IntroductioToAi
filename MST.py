@@ -34,11 +34,12 @@ class MST:
             for point, distance in dist.items():
                 if point in relevant_vertex:
                     new_edges = self.add_edge(new_edges, vertex, point, distance)
-        new_graph.update_edges(new_edges)
+        new_graph.edges = new_edges
         return new_graph
 
     def find_mst(self, graph):
         new_graph = copy.deepcopy(graph)
+        new_graph = self.create_relevant_vertex_graph(new_graph)
         new_edges = {}
         vertex = self.extruct_relevant_points(new_graph)
         num_of_vertices = 0
@@ -65,18 +66,17 @@ class MST:
             else:
                 break
 
-        new_graph.update_edges(new_edges)
+        new_graph.edges = new_edges
         return new_graph
 
     def calc_edges(self, graph):
         sum_edges = 0
-        for edge in graph.edges:
+        for edge in graph.edges.values():
             sum_edges += sum(edge.values())
         return sum_edges / 2
 
     def run_algo(self, graph):
-        new_graph = self.create_relevant_vertex_graph(graph)
-        mst_graph = self.find_mst(new_graph)
+        mst_graph = self.find_mst(graph)
         return self.calc_edges(mst_graph)
 
 

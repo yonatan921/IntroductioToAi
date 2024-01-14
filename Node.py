@@ -1,16 +1,16 @@
 import copy
 
-from Graph import Graph
 from name_tuppels import Point
 
 
 class Node:
-    def __init__(self, parent, action, state, depth, path_cost: int):
+    def __init__(self, parent, action, state, depth, path_cost: int, heuristic):
         self.parent: Node = parent
         self.action: Point = action
-        self.state: Graph = state
+        self.state = state
         self.depth: int = depth
         self.path_cost: int = path_cost
+        self.heuristic = heuristic
 
     def step_cost(self, node):
         pass
@@ -27,13 +27,15 @@ class Node:
         return False
 
     def __lt__(self, other):
-        return self.path_cost < other.path_cost
+        return self.path_cost + self.heuristic(self.state) < other.path_cost + other.heuristic(other.state)
 
-    def find_successors(self) -> {Point, Graph}:
+    def find_successors(self):
         successors = {}
         for available_point in self.state.available_moves(self.state.agents[0].point):
             new_graph = copy.deepcopy(self.state)
-            new_graph.agents[0].thin_move(available_point)
+            new_graph.timer += 1
+            new_graph.updae_packages()
+            new_graph.agents[0].move_agent(new_graph, available_point)
             successors[available_point] = new_graph
 
         return successors

@@ -6,13 +6,15 @@ from name_tuppels import Point
 
 
 class Graph:
-    def __init__(self, max_x: int, max_y: int, blocks: {frozenset}, fragile: {frozenset}, agents: [Aigent]):
+    def __init__(self, max_x: int, max_y: int, blocks: {frozenset}, fragile: {frozenset}, agents: [Aigent], timer, packages):
         self.grid = None
         self.edges = None
         self.relevant_packages = set()
         self.fragile = fragile
         self.agents: [Aigent] = agents
         self.init_grid(max_x, max_y, blocks)
+        self.timer = timer
+        self.all_packages = packages
 
     def init_grid(self, max_x, max_y, blocks: {frozenset}):
         self.grid = [[Tile(Point(i, j)) for i in range(max_x + 1)] for j in range(max_y + 1)]
@@ -23,7 +25,7 @@ class Graph:
             self.remove_edge(edge)
 
     def game_over(self):
-        return len(self.relevant_packages) == 0
+        return len(self.relevant_packages) == 0 and all([aigent.game_over() for aigent in self.agents])
 
     def add_aigent(self, aigent: Aigent):
         self.grid[aigent.point.y][aigent.point.x] = aigent
@@ -36,6 +38,8 @@ class Graph:
                                   package.from_time <= timer <= package.dead_line and not package.picked_up}
         for package in self.relevant_packages:
             self.add_package(package)
+
+        self.all_packages -= self.relevant_packages
 
     def can_move(self, location: Point, new_location: Point):
         return self.edges[location].get(new_location) is not None
