@@ -1,6 +1,7 @@
-from Aigent import Aigent
+from Aigent import Aigent, AiAigent
 from Graph import Graph
-from MST import MST
+from Problem import Problem
+from SearchALgo import GreedySearch
 
 
 class GameMaster:
@@ -11,13 +12,15 @@ class GameMaster:
         self.timer = 0
         self.all_packages = packages
         self.update_packages()
+        self.aiAigent = agents[0]
+        problem = Problem(self.graph, lambda g: g.game_over())
+        ai_algo = GreedySearch()
+        last_node = ai_algo.run_algo(problem, lambda x: 0)
+        self.aiAigent.parse_move(last_node)
 
     def start_game(self):
         while not self.game_over():
             print(self)
-            # mst = MST()
-            # new_graph = mst.create_relevant_vertex_graph(self.graph)
-            # mst_graph = mst.find_mst(new_graph)
             self.agents[self.turn_index % len(self.agents)].make_move(self.graph)
             self.timer += 1
             self.turn_index += 1
@@ -40,4 +43,3 @@ class GameMaster:
 
     def __str__(self):
         return str(self.graph)
-

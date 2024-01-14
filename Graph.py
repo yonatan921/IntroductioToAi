@@ -1,6 +1,8 @@
+from typing import Tuple
+
 from Aigent import Aigent
 from Tile import Tile, Package
-from name_tuppels import  Point
+from name_tuppels import Point
 
 
 class Graph:
@@ -9,7 +11,7 @@ class Graph:
         self.edges = None
         self.relevant_packages = set()
         self.fragile = fragile
-        self.agents = agents
+        self.agents: [Aigent] = agents
         self.init_grid(max_x, max_y, blocks)
 
     def init_grid(self, max_x, max_y, blocks: {frozenset}):
@@ -30,7 +32,8 @@ class Graph:
         self.grid[package.point.y][package.point.x] = package
 
     def update_packages(self, timer, packages):
-        self.relevant_packages = {package for package in packages if package.from_time <= timer <= package.dead_line and not package.picked_up}
+        self.relevant_packages = {package for package in packages if
+                                  package.from_time <= timer <= package.dead_line and not package.picked_up}
         for package in self.relevant_packages:
             self.add_package(package)
 
@@ -86,7 +89,8 @@ class Graph:
         # remove agent
         self.remove_tile(org_point)
 
-    def update_edges(self, new_edges):
-        self.edges = new_edges
+    def available_moves(self, my_point: Point) -> [Point]:
+        return [point for point, _ in self.edges[my_point].items()]
 
-
+    def edge_cost(self, p1, p2) -> int:
+        return self.edges[p1][p2]
