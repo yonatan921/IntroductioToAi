@@ -112,7 +112,29 @@ class Dijkstra:
         if not dist:
             return path
         self.storePath(parent, dest, path)
-        return path
+        return path, dist
+
+    def dijkstra_for_all_vertex(self, source: Point, points: {Point}):
+        spt_set = {point: False for point in self.V}
+        # self.V = {vertex for vertex in self.V if isinstance(vertex, Point)}
+        dist = {vertex: 1e7 for vertex in self.V}
+        parent = {vertex: -1 for vertex in self.V}
+        dist[source] = 0
+
+        for _ in range(len(self.V)):
+            u = self.min_distance(dist, spt_set)
+            spt_set[u] = True
+
+            if u in self.graph:
+                for v in self.graph[u].keys():
+                    if (self.graph[u][v] > 0 and
+                            v in spt_set and spt_set[v] is False and
+                            dist[v] > dist[u] + self.graph[u][v]):
+                        dist[v] = dist[u] + self.graph[u][v]
+                        parent[v] = u
+
+        dist = {point: value for point, value in dist.items() if point in points and value != 0}
+        return dist
 
 
 

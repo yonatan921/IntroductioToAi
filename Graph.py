@@ -86,4 +86,7 @@ class Graph:
         # remove agent
         self.remove_tile(org_point)
 
+    def update_edges(self, new_edges):
+        self.edges = new_edges
+
 

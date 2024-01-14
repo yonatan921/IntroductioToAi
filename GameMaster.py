@@ -1,5 +1,6 @@
 from Aigent import Aigent
 from Graph import Graph
+from MST import MST
 
 
 class GameMaster:
@@ -14,6 +15,9 @@ class GameMaster:
     def start_game(self):
         while not self.game_over():
             print(self)
+            # mst = MST()
+            # new_graph = mst.create_relevant_vertex_graph(self.graph)
+            # mst_graph = mst.find_mst(new_graph)
             self.agents[self.turn_index % len(self.agents)].make_move(self.graph)
             self.timer += 1
             self.turn_index += 1

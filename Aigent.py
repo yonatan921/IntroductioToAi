@@ -93,7 +93,7 @@ class StupidAigent(Aigent):
                 new_location = path[0]
         else:
             for package in self.pakages:
-                path = dijkstra.dijkstra_with_dest(self.point, package.point_dst)
+                path, dist = dijkstra.dijkstra_with_dest(self.point, package.point_dst)
                 if len(path) == 0:
                     self.no_op()
                 else:
