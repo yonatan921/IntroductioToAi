@@ -20,7 +20,7 @@ class Node:
         return self.state
 
     def __hash__(self):
-        return hash(self.evaluation)
+        return hash(self.__key())
 
     def __eq__(self, other):
         if isinstance(other, Node):

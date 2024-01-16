@@ -13,7 +13,8 @@ class Tile:
         return self.point == other.point and self.symbol == other.symbol
 
     def __hash__(self):
-        return hash((self.point.x, self.point.y))
+        return hash((self.point.x, self.point.y, self.symbol))
+
 
 class Package(Tile):
     def __init__(self, point: Point, from_time, point_dst, dead_line):

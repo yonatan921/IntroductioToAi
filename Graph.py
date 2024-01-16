@@ -105,8 +105,20 @@ class Graph:
             x = 6
         return dict1.get(p2)
 
+    def __hash__(self):
+        # Hash grid
+        hashable_attributes = [hash(tuple(map(hash, row))) for row in self.grid]
+
+        return hash(tuple(hashable_attributes))
+
     def __eq__(self, other):
-        for var, value in vars(self).items():
-            if var not in ["timer", "grid"] and value != vars(other)[var]:
-                return False
+        if not isinstance(other, Graph):
+            return False
+
+        # Compare grid
+        for row1, row2 in zip(self.grid, other.grid):
+            for tile1, tile2 in zip(row1, row2):
+                if tile1 != tile2:
+                    return False
+
         return True
