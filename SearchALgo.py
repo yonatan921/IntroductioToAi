@@ -23,7 +23,8 @@ class SearchALgo(abc.ABC):
                 closed[node] = node.evaluation
             successors = self.expand(node)
             for successor in successors:
-                heapq.heappush(heap, successor)
+                if successor not in closed:
+                    heapq.heappush(heap, successor)
 
         return None
 

@@ -17,10 +17,10 @@ class Node:
         pass
 
     def __key(self):
-        return self.parent, self.action, self.state, self.depth, self.path_cost
+        return self.state
 
     def __hash__(self):
-        return hash(self.__key())
+        return hash(self.evaluation)
 
     def __eq__(self, other):
         if isinstance(other, Node):

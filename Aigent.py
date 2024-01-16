@@ -154,3 +154,6 @@ class AiAigent(Aigent):
         while node:
             self.moves.append(node)
             node = node.parent
+
+    def __eq__(self, other):
+        return vars(self) == vars(other)

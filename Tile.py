@@ -9,6 +9,11 @@ class Tile:
     def __str__(self):
         return self.symbol.ljust(2) + " "
 
+    def __eq__(self, other):
+        return self.point == other.point and self.symbol == other.symbol
+
+    def __hash__(self):
+        return hash((self.point.x, self.point.y))
 
 class Package(Tile):
     def __init__(self, point: Point, from_time, point_dst, dead_line):

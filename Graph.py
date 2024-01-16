@@ -6,7 +6,8 @@ from name_tuppels import Point
 
 
 class Graph:
-    def __init__(self, max_x: int, max_y: int, blocks: {frozenset}, fragile: {frozenset}, agents: [Aigent], timer, packages):
+    def __init__(self, max_x: int, max_y: int, blocks: {frozenset}, fragile: {frozenset}, agents: [Aigent], timer,
+                 packages):
         self.grid = None
         self.edges = None
         self.relevant_packages = set()
@@ -99,7 +100,13 @@ class Graph:
     def edge_cost(self, p1, p2) -> int:
         if p1 == p2:
             return 0
-        dict1 =  self.edges.get(p1)
+        dict1 = self.edges.get(p1)
         if not dict1:
-            x=6
+            x = 6
         return dict1.get(p2)
+
+    def __eq__(self, other):
+        for var, value in vars(self).items():
+            if var not in ["timer", "grid"] and value != vars(other)[var]:
+                return False
+        return True
