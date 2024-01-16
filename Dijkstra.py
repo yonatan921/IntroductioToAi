@@ -36,8 +36,8 @@ class Dijkstra:
         min_index = None
         for v in self.V:
             x = dist[v]
-            if x == 0:
-                pass
+            # if x == 0:
+            #     pass
             if dist[v] < min_dist and spt_set[v] is False:
                 min_dist = dist[v]
                 min_index = v

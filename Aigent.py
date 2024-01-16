@@ -59,9 +59,9 @@ class Aigent(abc.ABC, Tile):
             self.pakages -= deliver_packages
 
         # move the agent
-
-        graph.move_agent(self.point, new_location)
-        self.point = new_location
+        if self.point != new_location:
+            graph.move_agent(self.point, new_location)
+            self.point = new_location
 
     def move_agent_without_packages(self, graph, new_location):
         edge_crossed = {self.point, new_location}
