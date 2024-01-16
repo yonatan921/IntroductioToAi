@@ -47,6 +47,7 @@ class Aigent(abc.ABC, Tile):
                 package.picked_up = True
                 graph.remove_tile(package.point)
         graph.relevant_packages -= taken_packages
+        graph.all_packages -= taken_packages
         # deliver package
         if len(self.pakages) > 0:
             deliver_packages = set()

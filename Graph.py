@@ -33,13 +33,13 @@ class Graph:
     def add_package(self, package: Package):
         self.grid[package.point.y][package.point.x] = package
 
-    def update_packages(self, timer, packages):
-        self.relevant_packages = {package for package in packages if
-                                  package.from_time <= timer <= package.dead_line and not package.picked_up}
+    def update_packages(self):
+        self.relevant_packages = {package for package in self.all_packages if
+                                  package.from_time <= self.timer <= package.dead_line and not package.picked_up}
         for package in self.relevant_packages:
             self.add_package(package)
 
-        self.all_packages -= self.relevant_packages
+        # self.all_packages -= self.relevant_packages
 
     def can_move(self, location: Point, new_location: Point):
         return self.edges[location].get(new_location) is not None
@@ -94,7 +94,12 @@ class Graph:
         self.remove_tile(org_point)
 
     def available_moves(self, my_point: Point) -> [Point]:
-        return [point for point, _ in self.edges[my_point].items()]
+        return [point for point, _ in self.edges[my_point].items()] + [my_point]
 
     def edge_cost(self, p1, p2) -> int:
-        return self.edges[p1][p2]
+        if p1 == p2:
+            return 0
+        dict1 =  self.edges.get(p1)
+        if not dict1:
+            x=6
+        return dict1.get(p2)

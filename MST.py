@@ -54,13 +54,13 @@ class MST:
 
             for m in visited:
                 for n in vertex:
-                    if n not in visited and new_graph.edges[m][n] is not None:
-                        if minimum > new_graph.edges[m][n]:
-                            minimum = new_graph.edges[m][n]
+                    if n not in visited and new_graph.edge_cost(m, n) is not None:
+                        if minimum > new_graph.edge_cost(m, n):
+                            minimum = new_graph.edge_cost(m, n)
                             a, b = m, n
 
             if b is not None:
-                new_edges = self.add_edge(new_edges, a, b, new_graph.edges[a][b])
+                new_edges = self.add_edge(new_edges, a, b, new_graph.edge_cost(a, b))
                 visited.add(b)
                 num_of_vertices += 1
             else:
@@ -78,8 +78,3 @@ class MST:
     def run_algo(self, graph):
         mst_graph = self.find_mst(graph)
         return self.calc_edges(mst_graph)
-
-
-
-
-

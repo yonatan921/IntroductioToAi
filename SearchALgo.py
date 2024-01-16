@@ -12,16 +12,15 @@ class SearchALgo(abc.ABC):
 
     def run_algo(self, problem: Problem, heuristic: Callable[[Graph], int]) -> Optional[Node]:
         heap: [Node] = []
-        init_node = Node(None, problem.init_state.agents[0].point, MST().find_mst(problem.init_state), 0, 0, heuristic)
+        init_node = Node(None, problem.init_state.agents[0].point, problem.init_state, 0, 0, heuristic)
         heapq.heappush(heap, init_node)
         closed: {Node: int} = {}
         while heap:
             node = heapq.heappop(heap)
             if problem.goal_state(node.state) or self.check_expansion_limit(node.depth):
                 return node
-            cal_evaluation: int = self.evaluation(node, heuristic)
-            if node not in closed or cal_evaluation < closed[node]:
-                closed[node] = cal_evaluation
+            if node not in closed or node.evaluation < closed[node]:
+                closed[node] = node.evaluation
             successors = self.expand(node)
             for successor in successors:
                 heapq.heappush(heap, successor)

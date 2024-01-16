@@ -40,7 +40,7 @@ class GameMaster:
             aigent.update_packages(self.timer)
 
     def update_graph_packages(self):
-        self.graph.update_packages(self.timer, self.all_packages)
+        self.graph.update_packages()
 
     def __str__(self):
         return str(self.graph)

@@ -32,14 +32,14 @@ class Dijkstra:
         print(f"dist: {min} node {node1}")
 
     def min_distance(self, dist, spt_set):
-        min = 1e7
+        min_dist = float("inf")
         min_index = None
         for v in self.V:
             x = dist[v]
             if x == 0:
                 pass
-            if dist[v] < min and spt_set[v] is False:
-                min = dist[v]
+            if dist[v] < min_dist and spt_set[v] is False:
+                min_dist = dist[v]
                 min_index = v
 
         return min_index
@@ -91,7 +91,7 @@ class Dijkstra:
     def dijkstra_with_dest(self, source: Point, dest: Point):
         spt_set = {point: False for point in self.V}
         # self.V = {vertex for row in self.V for vertex in row }
-        dist = {vertex: 1e7 for vertex in self.V}
+        dist = {vertex: float("inf") for vertex in self.V}
         parent = {vertex: -1 for vertex in self.V}  # NEW: to store the shortest path tree
         dist[source] = 0
 
@@ -101,10 +101,10 @@ class Dijkstra:
 
             if u in self.graph:
                 for v in self.graph[u].keys():
-                    if (self.graph[u][v] > 0 and
+                    if (self.graph[u].get(v, 0) > 0 and
                             spt_set[v] is False and
-                            dist[v] > dist[u] + self.graph[u][v]):
-                        dist[v] = dist[u] + self.graph[u][v]
+                            dist[v] > dist[u] + self.graph[u].get(v, 0)):
+                        dist[v] = dist[u] + self.graph[u].get(v, 0)
                         parent[v] = u
 
         dist = dist.get(dest)
@@ -117,26 +117,28 @@ class Dijkstra:
     def dijkstra_for_all_vertex(self, source: Point, points: {Point}):
         spt_set = {point: False for point in self.V}
         # self.V = {vertex for vertex in self.V if isinstance(vertex, Point)}
-        dist = {vertex: 1e7 for vertex in self.V}
+        dist = {vertex: float("inf") for vertex in self.V}
         parent = {vertex: -1 for vertex in self.V}
         dist[source] = 0
 
-        for _ in range(len(self.V)):
+        for i in range(len(self.V)):
+
             u = self.min_distance(dist, spt_set)
             spt_set[u] = True
 
             if u in self.graph:
                 for v in self.graph[u].keys():
-                    if (self.graph[u][v] > 0 and
+                    if (self.graph[u].get(v, 0) > 0 and
                             v in spt_set and spt_set[v] is False and
-                            dist[v] > dist[u] + self.graph[u][v]):
-                        dist[v] = dist[u] + self.graph[u][v]
+                            dist[v] > dist[u] + self.graph[u].get(v, 0)):
+                        dist[v] = dist[u] + self.graph[u].get(v, 0)
                         parent[v] = u
 
         dist = {point: value for point, value in dist.items() if point in points and value != 0}
+        for point, value in dist.items():
+            if value == float("inf"):
+                x= 8
         return dist
-
-
 
 #
 # grid = [[Tile(Point(i, j)) for i in range(5)] for j in range(4)]
