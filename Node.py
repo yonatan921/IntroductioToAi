@@ -4,14 +4,14 @@ from name_tuppels import Point
 
 
 class Node:
-    def __init__(self, parent, action, state, depth, path_cost: int, heuristic):
+    def __init__(self, parent, action, state, depth, path_cost: int,heuristic,  evaluation_func):
         self.parent: Node = parent
         self.action: Point = action
         self.state = state
         self.depth: int = depth
         self.path_cost: int = path_cost
         self.heuristic = heuristic
-        self.evaluation = heuristic(self.state) + path_cost
+        self.evaluation = evaluation_func(self, heuristic)
 
     def step_cost(self, node):
         pass

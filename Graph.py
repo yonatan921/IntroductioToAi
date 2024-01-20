@@ -107,18 +107,23 @@ class Graph:
 
     def __hash__(self):
         # Hash grid
-        hashable_attributes = [hash(tuple(map(hash, row))) for row in self.grid]
+        # hashable_attributes = [hash(tuple(map(hash, row))) for row in self.grid]
 
-        return hash(tuple(hashable_attributes))
+        # return hash(tuple(hashable_attributes))
+        return hash(self.__key())
 
     def __eq__(self, other):
         if not isinstance(other, Graph):
             return False
+        return self.__key() == other.__key()
+        #
+        # # Compare grid
+        # for row1, row2 in zip(self.grid, other.grid):
+        #     for tile1, tile2 in zip(row1, row2):
+        #         if tile1 != tile2:
+        #             return False
+        #
+        # return True
 
-        # Compare grid
-        for row1, row2 in zip(self.grid, other.grid):
-            for tile1, tile2 in zip(row1, row2):
-                if tile1 != tile2:
-                    return False
-
-        return True
+    def __key(self):
+        return tuple(self.relevant_packages), tuple(self.fragile), tuple(self.agents), self.timer

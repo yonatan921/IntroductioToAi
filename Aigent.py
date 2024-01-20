@@ -34,7 +34,8 @@ class Aigent(abc.ABC, Tile):
         pass
 
     def move_agent(self, graph, new_location):
-        edge_crossed = frozenset({self.point, new_location})
+        current_point = self.point
+        edge_crossed = frozenset({current_point, new_location})
         if edge_crossed in graph.fragile:
             graph.remove_edge(edge_crossed)
             graph.remove_fragile_edge(edge_crossed)
@@ -60,8 +61,9 @@ class Aigent(abc.ABC, Tile):
 
         # move the agent
         if self.point != new_location:
-            graph.move_agent(self.point, new_location)
             self.point = new_location
+            graph.move_agent(current_point, new_location)
+
 
     def move_agent_without_packages(self, graph, new_location):
         edge_crossed = {self.point, new_location}
@@ -72,6 +74,18 @@ class Aigent(abc.ABC, Tile):
         graph.move_agent(self.point, new_location)
         self.point = new_location
 
+    def __key(self):
+        return self.point, self.symbol, tuple(self.pakages), self.score
+
+    def __hash__(self):
+        return hash(self.__key())
+
+    def __eq__(self, other):
+        if not isinstance(other, Aigent):
+            return False
+
+        return self.__key() == other.__key()
+
 
 class StupidAigent(Aigent):
 
@@ -80,7 +94,7 @@ class StupidAigent(Aigent):
         self.symbol = "A"
 
     def make_move(self, graph):
-        dijkstra = Dijkstra(graph.grid, graph.edges)
+        dijkstra = Dijkstra(graph)
         new_location = self.point
         if len(self.pakages) == 0:
             packages_to_take = graph.get_packages_to_take()
@@ -128,7 +142,7 @@ class InterferingAigent(Aigent):
         self.symbol = "I"
 
     def make_move(self, graph):
-        dijkstra = Dijkstra(graph.grid, graph.edges)
+        dijkstra = Dijkstra(graph)
         points_of_fragile = set()
         for point in graph.fragile:
             points_of_fragile.update(point)
@@ -154,6 +168,6 @@ class AiAigent(Aigent):
         while node:
             self.moves.append(node)
             node = node.parent
+        self.moves.pop()
 
-    def __eq__(self, other):
-        return vars(self) == vars(other)
+

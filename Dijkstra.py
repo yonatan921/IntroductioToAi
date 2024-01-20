@@ -3,14 +3,16 @@ from name_tuppels import Point
 
 
 class Dijkstra:
-    def __init__(self, grid, edges):  # todo: add block edges
-        vertex = set()
-        for tile_list in grid:
-            for tile in tile_list:
-                vertex.add(tile.point)
+    def __init__(self, graph):  # todo: add block edges
+
+        vertex = {ver for ver in graph.edges.keys()}
+
+        # for tile_list in grid:
+        #     for tile in tile_list:
+        #         vertex.add(tile.point)
 
         self.V = vertex
-        self.graph = edges
+        self.graph = graph.edges
 
     def add_edge(self, u, v):
         if u not in self.V:

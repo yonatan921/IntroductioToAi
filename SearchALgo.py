@@ -6,17 +6,20 @@ from Graph import Graph
 from MST import MST
 from Node import Node
 from Problem import Problem
+from name_tuppels import Point
 
 
 class SearchALgo(abc.ABC):
 
     def run_algo(self, problem: Problem, heuristic: Callable[[Graph], int]) -> Optional[Node]:
         heap: [Node] = []
-        init_node = Node(None, problem.init_state.agents[0].point, problem.init_state, 0, 0, heuristic)
+        init_node = Node(None, problem.init_state.agents[0].point, problem.init_state, 0, 0, heuristic, self.evaluation)
         heapq.heappush(heap, init_node)
         closed: {Node: int} = {}
         while heap:
             node = heapq.heappop(heap)
+            if all(len(node.state.grid[i]) != 5 for i in range(4)):
+                x=  6
             if problem.goal_state(node.state) or self.check_expansion_limit(node.depth):
                 return node
             if node not in closed or node.evaluation < closed[node]:
@@ -33,7 +36,7 @@ class SearchALgo(abc.ABC):
         for action, result in node.find_successors().items():
             successor = Node(parent=node, action=action, state=result, depth=node.depth + 1,
                              path_cost=node.path_cost + node.state.edge_cost(node.action, action),
-                             heuristic=node.heuristic)
+                             heuristic=node.heuristic, evaluation_func=self.evaluation)
             successors.add(successor)
         return successors
 

@@ -19,15 +19,18 @@ class MST:
         vertex = set()
         for agent in graph.agents:
             vertex.add(agent.point)
+            for package in agent.pakages:
+                vertex.add(package.point_dst)
         for package in graph.relevant_packages:
             vertex.add(package.point)
             vertex.add(package.point_dst)
+
         return vertex
 
     def create_relevant_vertex_graph(self, graph):
         new_graph = copy.deepcopy(graph)
         new_edges = {}
-        dijkstra = Dijkstra(graph.grid, graph.edges)
+        dijkstra = Dijkstra(new_graph)
         relevant_vertex = self.extruct_relevant_points(graph)
         for vertex in relevant_vertex:
             dist = dijkstra.dijkstra_for_all_vertex(vertex, relevant_vertex)
