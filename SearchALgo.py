@@ -1,27 +1,29 @@
 import abc
 import heapq
-from typing import Callable, Optional, Any
+from typing import Callable, Optional, Any, Tuple
 
 from Graph import Graph
-from MST import MST
 from Node import Node
 from Problem import Problem
-from name_tuppels import Point
+from ReturnStatus import ReturnStatus
 
 
 class SearchALgo(abc.ABC):
+    def __init__(self):
+        self.expands_nums = 0
 
-    def run_algo(self, problem: Problem, heuristic: Callable[[Graph], int]) -> Optional[Node]:
+    def run_algo(self, problem: Problem, heuristic: Callable[[Graph], int]) -> Tuple[Optional[Node], ReturnStatus]:
         heap: [Node] = []
         init_node = Node(None, problem.init_state.agents[0].point, problem.init_state, 0, 0, heuristic, self.evaluation)
         heapq.heappush(heap, init_node)
         closed: {Node: int} = {}
         while heap:
             node = heapq.heappop(heap)
-            if all(len(node.state.grid[i]) != 5 for i in range(4)):
-                x=  6
-            if problem.goal_state(node.state) or self.check_expansion_limit(node.depth):
-                return node
+            self.expands_nums += 1
+            if problem.goal_state(node.state):
+                return node, ReturnStatus.Good
+            if self.check_expansion_limit():
+                return self.handle_expansion_limit(node)
             if node not in closed or node.evaluation < closed[node]:
                 closed[node] = node.evaluation
             successors = self.expand(node)
@@ -29,7 +31,7 @@ class SearchALgo(abc.ABC):
                 if successor not in closed:
                     heapq.heappush(heap, successor)
 
-        return None
+        return None, ReturnStatus.Fail
 
     def expand(self, node: Node) -> {Node}:
         successors = set()
@@ -44,23 +46,46 @@ class SearchALgo(abc.ABC):
     def evaluation(self, node: Node, heuristic: Callable[[Graph], int]) -> int:
         pass
 
-    def check_expansion_limit(self, depth: int) -> bool:
-        return False
+    @abc.abstractmethod
+    def check_expansion_limit(self) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def handle_expansion_limit(self, node):
+        pass
 
 
 class GreedySearch(SearchALgo):
     def evaluation(self, node: Node, heuristic: Callable[[Graph], int]) -> int:
         return heuristic(node.state)
 
+    def check_expansion_limit(self) -> bool:
+        return False
+
+    def handle_expansion_limit(self, node):
+        pass
+
 
 class AStar(SearchALgo):
+    def __init__(self, expansion_limit=10_000):
+        super().__init__()
+        self.expansion_limit = expansion_limit
+
     def evaluation(self, node: Node, heuristic: Callable[[Graph], int]) -> int:
         return node.path_cost + heuristic(node.state)
+
+    def check_expansion_limit(self) -> bool:
+        return self.expands_nums >= self.expansion_limit
+
+    def handle_expansion_limit(self, node):
+        return node, ReturnStatus.Fail
 
 
 class RealTimeAStar(AStar):
     def __init__(self, expansion_limit=10):
+        super().__init__(expansion_limit)
         self.expansion_limit = expansion_limit
 
-    def check_expansion_limit(self, depth: int) -> bool:
-        return self.expansion_limit == depth
+    def handle_expansion_limit(self, node):
+        return node, ReturnStatus.Cutoff
+

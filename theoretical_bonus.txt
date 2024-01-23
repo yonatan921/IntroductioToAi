@@ -1,0 +1,10 @@
+We can easly see that MAPD is harder then TSP.
+Lest show a reduction from TSP to MAPD
+Assume x is TSP instance. We will convert it to MAPD instance.
+No fregile, blocks egdes.
+For each Vertex of TSP we will put a package with pickup point = destenation point in this vertex.
+from time 0 to deliver infinte.
+So if the aignet land on a vertex he pick up and deliver the packaged immidiatly.
+So he just need to travel all the vertex in a minumum time.
+We kmow that TSP is NP hard so because we solve TSP with MAPD in a polynimyal reduction time.
+MAPD is at least NP hard.

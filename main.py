@@ -1,8 +1,6 @@
-import copy
 
 from Aigent import AiAigent
 from Graph import Graph
-from Node import Node
 from Parser import Parser
 from GameMaster import GameMaster
 from name_tuppels import Point

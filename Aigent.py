@@ -1,7 +1,9 @@
 import abc
 from typing import Tuple
 
+from MST import MST
 from Node import Node
+from ReturnStatus import ReturnStatus
 from Tile import Tile
 from name_tuppels import Point
 from Dijkstra import Dijkstra
@@ -159,15 +161,35 @@ class AiAigent(Aigent):
         super().__init__(starting_point)
         self.symbol = "AI"
         self.moves = []
+        self.problem = None
+        self.algo = None
 
     def make_move(self, graph):
+        if self.moves is None:
+            self.move_agent(graph, self.point)
+
         new_location = self.moves.pop().action
         self.move_agent(graph, new_location)
-
-    def parse_move(self, node: Node):
-        while node:
-            self.moves.append(node)
-            node = node.parent
-        self.moves.pop()
+        if not self.moves:
+            self.run_algo()
 
 
+    def parse_move(self, node: Node, return_status):
+        if return_status == ReturnStatus.Fail:
+            self.moves = None
+        elif return_status == ReturnStatus.Cutoff:
+            while node:
+                self.moves.append(node)
+                node = node.parent
+            self.moves.pop()
+            self.moves = [self.moves.pop()]
+        else:
+            while node:
+                self.moves.append(node)
+                node = node.parent
+            self.moves.pop()
+
+    def run_algo(self):
+        last_node, return_status = self.algo.run_algo(self.problem, lambda g: MST().run_algo(g))
+        self.algo.expands_nums = 0
+        self.parse_move(last_node, return_status)

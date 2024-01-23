@@ -2,7 +2,7 @@ from Aigent import Aigent, AiAigent
 from Graph import Graph
 from MST import MST
 from Problem import Problem
-from SearchALgo import GreedySearch, AStar
+from SearchALgo import GreedySearch, AStar, RealTimeAStar
 
 
 class GameMaster:
@@ -11,10 +11,9 @@ class GameMaster:
         self.turn_index = 0
         self.all_packages = packages
         self.update_packages()
-        problem = Problem(self.graph, lambda g: g.game_over())
-        ai_algo = GreedySearch()
-        last_node = ai_algo.run_algo(problem, lambda g: MST().run_algo(g))
-        self.graph.agents[0].parse_move(last_node)
+        self.graph.agents[0].problem = Problem(self.graph, lambda g: g.game_over())
+        self.graph.agents[0].algo = RealTimeAStar(50)
+        self.graph.agents[0].run_algo()
 
     def start_game(self):
         while not self.game_over():

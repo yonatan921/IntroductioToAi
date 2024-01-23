@@ -99,7 +99,7 @@ class Graph:
 
     def edge_cost(self, p1, p2) -> int:
         if p1 == p2:
-            return 0
+            return 1
         dict1 = self.edges.get(p1)
         if not dict1:
             x = 6
@@ -126,4 +126,4 @@ class Graph:
         # return True
 
     def __key(self):
-        return tuple(self.relevant_packages), tuple(self.fragile), tuple(self.agents), self.timer
+        return tuple(self.relevant_packages), tuple(self.fragile), tuple(self.agents)
