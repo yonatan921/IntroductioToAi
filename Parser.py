@@ -10,9 +10,11 @@ class Parser:
     def __init__(self):
         parser = argparse.ArgumentParser(description="Multi-Agent Pickup and Delivery")
         parser.add_argument('filename', help="Input file path for the program")
+        parser.add_argument('algo', help="Input file path for the program")
         args = parser.parse_args()
         filename = args.filename
 
+        self.algo = args.algo
         self.max_x = None
         self.max_y = None
         self.packages: {Package} = set()

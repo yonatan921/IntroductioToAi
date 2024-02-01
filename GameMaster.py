@@ -6,13 +6,14 @@ from SearchALgo import GreedySearch, AStar, RealTimeAStar
 
 
 class GameMaster:
-    def __init__(self, graph: Graph, packages):
+    def __init__(self, graph: Graph, packages, algo_string):
+        string_to_algo = {"Astar": AStar(), "Gready": GreedySearch(), "RealTime": RealTimeAStar()}
         self.graph = graph
         self.turn_index = 0
         self.all_packages = packages
         self.update_packages()
         self.graph.agents[0].problem = Problem(self.graph, lambda g: g.game_over())
-        self.graph.agents[0].algo = RealTimeAStar(50)
+        self.graph.agents[0].algo = string_to_algo[algo_string]
         self.graph.agents[0].run_algo()
 
     def start_game(self):
