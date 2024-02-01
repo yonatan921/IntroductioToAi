@@ -7,6 +7,7 @@ from name_tuppels import Point
 
 
 class Parser:
+
     def __init__(self):
         parser = argparse.ArgumentParser(description="Multi-Agent Pickup and Delivery")
         parser.add_argument('filename', help="Input file path for the program")
