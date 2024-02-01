@@ -1,13 +1,11 @@
-from Aigent import Aigent, AiAigent
 from Graph import Graph
-from MST import MST
 from Problem import Problem
 from SearchALgo import GreedySearch, AStar, RealTimeAStar
 
 
 class GameMaster:
     def __init__(self, graph: Graph, packages, algo_string):
-        string_to_algo = {"Astar": AStar(), "Gready": GreedySearch(), "RealTime": RealTimeAStar()}
+        string_to_algo = {"Astar": AStar(), "Gready": GreedySearch(), "RealTime": RealTimeAStar(50)}
         self.graph = graph
         self.turn_index = 0
         self.all_packages = packages

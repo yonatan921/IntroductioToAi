@@ -9,13 +9,21 @@ from name_tuppels import Point
 class Parser:
 
     def __init__(self):
-        parser = argparse.ArgumentParser(description="Multi-Agent Pickup and Delivery")
-        parser.add_argument('filename', help="Input file path for the program")
-        parser.add_argument('algo', help="Input file path for the program")
+        parser = argparse.ArgumentParser(description="Your program description here")
+        alogrithems = {"Astar" ,"Gready" ,"RealTime"}
+        # Adding the 'filename' and 'algo' arguments
+        parser.add_argument('--file', dest='filename', help="Input file path for the program")
+        parser.add_argument('--algo', help="Algorithm for the program, Astar Gready RealTime")
+
+        # Parse the command-line arguments
         args = parser.parse_args()
+
+        # Access the values using args.filename and args.algo
         filename = args.filename
 
         self.algo = args.algo
+        if self.algo not in alogrithems:
+            raise Exception
         self.max_x = None
         self.max_y = None
         self.packages: {Package} = set()
